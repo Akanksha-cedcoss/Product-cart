@@ -6,5 +6,6 @@ $(document).ready(function () {
     { id: 104, name: "Table Tennis", image: "table-tennis.png", price: 130 },
     { id: 105, name: "Tennis", image: "tennis.png", price: 100 },
   ];
+  
   //end script
 });
