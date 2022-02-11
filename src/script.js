@@ -7,6 +7,7 @@ $(document).ready(function () {
     { id: 105, name: "Tennis", image: "tennis.png", price: 100 },
   ];
   var cart = [];
+  var subtotal = 0;
   //add prodct card for each product
   $.fn.addProductCard = function (parent_div, product) {
     let id = product.id;
@@ -28,9 +29,10 @@ $(document).ready(function () {
     main_div.append("<div id='wrapper'></div>");
     let Wrapperdiv = $("#wrapper");
     Wrapperdiv.empty();
+    subtotal = 0;
     // button to delete cart
     Wrapperdiv.append(
-      "<input type='button' value='Delete Cart' id='#deleteCart'>"
+      "<input type='button' value='Delete Cart' id='deleteCart'>"
     );
     Wrapperdiv.append(
       '<div id="product_list"><table id="product-table"></table></div>'
@@ -55,6 +57,7 @@ $(document).ready(function () {
     for (let i = 0; i < cart.length; i++) {
       var current_product = cart[i];
       var index = $.fn.findProductIndex(cart[i].id);
+      subtotal += products[index].price * current_product.quantity;
 
       table.append(
         "<tr class='cart'><td>" +
@@ -69,18 +72,22 @@ $(document).ready(function () {
           "<td>" +
           current_product.quantity +
           "</td>" +
-          "<td data-id='" +
+          "<td id='actionTd' data-id='" +
           current_product.id +
           "'><a href='#' data-value='increase' id='increaseQuantity'>+</a>" +
           "<input id='manual-update-quantity' value=" +
           current_product.quantity +
           ">" +
           "<a href='#' data-value='decrease' id='decreaseQuantity'>-</a>" +
-          "<input type='button' value='UPDATE' id='#update'>" +
+          "<input type='button' value='UPDATE' id='update'>" +
           "</td></tr>"
       );
     }
+    //update subtotal
+//load cart report
+    $("#product_list").append("<p id='subtotal'>Your subtotal is $" + subtotal + "</p>");
   };
+
   //load basic html
   $.fn.loadBasicHtml = function () {
     var main_div = $("#main");
@@ -93,8 +100,10 @@ $(document).ready(function () {
 
     //load product card
     $.fn.loadCart();
+    
+    
   };
-  //find product in product lit
+  //find product in product list
   $.fn.findProductIndex = function (product_id) {
     for (var i = 0; i < products.length; i++) {
       if (product_id == products[i].id) {
@@ -136,12 +145,36 @@ $(document).ready(function () {
       cart[i].quantity -= 1;
 
       if (cart[i].quantity < 1) {
-        console.log("deleting from cart:", cart[i]);
         cart.splice(i, 1);
       }
     }
 
     $.fn.loadCart();
+  });
+  // delete cart
+  $("body").on("click", "#deleteCart", function () {
+    console.log("clicked delete");
+    cart = [];
+    subtotal = 0;
+    $.fn.loadCart();
+  });
+  //update quantity by text field
+  $("body").on("click", "#update", function () {
+    var new_quantity = $("#manual-update-quantity").val();
+    let pid = $(this).parent().data("id");
+
+    for (var i = 0; i < cart.length; i++) {
+      if (pid == cart[i].id) {
+        console.log("updating =", cart[i]);
+        if (new_quantity == 0) {
+          cart.splice(i, 1);
+        } else {
+          cart[i].quantity = new_quantity;
+        }
+
+        $.fn.loadCart();
+      }
+    }
   });
   $.fn.loadBasicHtml();
   //end script
