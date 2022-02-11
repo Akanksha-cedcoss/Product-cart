@@ -57,7 +57,9 @@ $(document).ready(function () {
 
       table.append(
         "<tr class='cart'><td>" +
-          "<img class='height' src='images/"+products[index].image+"'>"+
+          "<img class='height' src='images/" +
+          products[index].image +
+          "'>" +
           //current_product.id +
           "</td>" +
           "<td>" +
@@ -72,7 +74,7 @@ $(document).ready(function () {
           "<td id='actionTd' data-id='" +
           current_product.id +
           "'><a href='#' data-value='increase' id='increaseQuantity'>+</a>" +
-          "<input id='manual-update-quantity' value=" +
+          "<input class='manual-update-quantity' value=" +
           current_product.quantity +
           ">" +
           "<a href='#' data-value='decrease' id='decreaseQuantity'>-</a>" +
@@ -154,22 +156,31 @@ $(document).ready(function () {
     console.log("clicked delete");
     cart = [];
     subtotal = 0;
-    $.fn.loadCart();
+    $.fn.updateCart();
   });
   //update quantity by text field
-  $("body").on("click", "#update", function () {
-    var new_quantity = $("#manual-update-quantity").val();
+  var update;
+  $("body").on("keyup", ".manual-update-quantity", function () {
+    update= $(".manual-update-quantity").val();
+  });
+  //$("body").on("keyup", ".manual-update-quantity", function () {
+ $("body").on("click", "#update", function () {
+    var new_quantity = $(this).parent().find(">:nth-child(2)").val();
+   console.log($(this).parent().find(">:nth-child(2)").val());
+  
     let pid = $(this).parent().data("id");
-
+    console.log(pid ,'  ,',new_quantity);
     for (var i = 0; i < cart.length; i++) {
       if (pid == cart[i].id) {
         console.log("updating =", cart[i]);
         if (new_quantity == 0) {
           cart.splice(i, 1);
+          console.log('deleted product',cart);
         } else {
           cart[i].quantity = new_quantity;
+          console.log('updated:',cart);
         }
-
+        
         $.fn.updateCart();
       }
     }

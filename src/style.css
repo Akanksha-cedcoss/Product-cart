@@ -183,7 +183,7 @@ start
   text-align: left;
 }
 
-#manual-update-quantity {
+.manual-update-quantity {
   width: 20%;
   margin-top: 0;
 }
