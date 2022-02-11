@@ -25,11 +25,8 @@ $(document).ready(function () {
   };
   //load cart
   $.fn.loadCart = function () {
-    var main_div = $("#main");
-    main_div.append("<div id='wrapper'></div>");
-    let Wrapperdiv = $("#wrapper");
-    Wrapperdiv.empty();
-    subtotal = 0;
+    var Wrapperdiv = $("#main");
+
     // button to delete cart
     Wrapperdiv.append(
       "<input type='button' value='Delete Cart' id='deleteCart'>"
@@ -40,20 +37,19 @@ $(document).ready(function () {
     let table = $("#product-table");
     table.append(
       "<tr>" +
-        "<th>Product Id</th>" +
+        "<th>Product</th>" +
         "<th>Product Name</th>" +
         "<th>Product Price</th>" +
         "<th>Quantity</th>" +
         "<th>Action</th>" +
         "</tr>"
     );
-    if (cart.length > 0) {
-      $.fn.updateCart();
-    }
   };
   //update table data
   $.fn.updateCart = function () {
+    subtotal = 0;
     let table = $("#product-table");
+    table.children("tr:not(:first)").remove();
     for (let i = 0; i < cart.length; i++) {
       var current_product = cart[i];
       var index = $.fn.findProductIndex(cart[i].id);
@@ -61,7 +57,8 @@ $(document).ready(function () {
 
       table.append(
         "<tr class='cart'><td>" +
-          current_product.id +
+          "<img class='height' src='images/"+products[index].image+"'>"+
+          //current_product.id +
           "</td>" +
           "<td>" +
           products[index].name +
@@ -84,8 +81,11 @@ $(document).ready(function () {
       );
     }
     //update subtotal
-//load cart report
-    $("#product_list").append("<p id='subtotal'>Your subtotal is $" + subtotal + "</p>");
+    //load cart report
+
+    $("#subtotal")
+      .empty()
+      .append("<p id='subtotal'>Your subtotal is $" + subtotal + "</p>");
   };
 
   //load basic html
@@ -100,8 +100,7 @@ $(document).ready(function () {
 
     //load product card
     $.fn.loadCart();
-    
-    
+    main_div.append("<div id='subtotal'></div>");
   };
   //find product in product list
   $.fn.findProductIndex = function (product_id) {
@@ -126,8 +125,7 @@ $(document).ready(function () {
     if (bool) {
       cart.push({ id: pid, quantity: 1 });
     }
-
-    $.fn.loadCart();
+    $.fn.updateCart();
   });
   //increase quantity
   $("body").on("click", "#increaseQuantity ,#decreaseQuantity", function () {
@@ -149,7 +147,7 @@ $(document).ready(function () {
       }
     }
 
-    $.fn.loadCart();
+    $.fn.updateCart();
   });
   // delete cart
   $("body").on("click", "#deleteCart", function () {
@@ -172,7 +170,7 @@ $(document).ready(function () {
           cart[i].quantity = new_quantity;
         }
 
-        $.fn.loadCart();
+        $.fn.updateCart();
       }
     }
   });
