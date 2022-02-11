@@ -29,7 +29,9 @@ $(document).ready(function () {
     let Wrapperdiv = $("#wrapper");
     Wrapperdiv.empty();
     // button to delete cart
-    Wrapperdiv.append("<input type='button' value='Delete Cart' id='#deleteCart'>")
+    Wrapperdiv.append(
+      "<input type='button' value='Delete Cart' id='#deleteCart'>"
+    );
     Wrapperdiv.append(
       '<div id="product_list"><table id="product-table"></table></div>'
     );
@@ -52,7 +54,8 @@ $(document).ready(function () {
     let table = $("#product-table");
     for (let i = 0; i < cart.length; i++) {
       var current_product = cart[i];
-      var index = current_product.index;
+      var index = $.fn.findProductIndex(cart[i].id);
+
       table.append(
         "<tr class='cart'><td>" +
           current_product.id +
@@ -87,9 +90,18 @@ $(document).ready(function () {
     for (let i = 0; i < products.length; i++) {
       product_div.append($.fn.addProductCard(product_div, products[i]));
     }
-    
+
     //load product card
     $.fn.loadCart();
+  };
+  //find product in product lit
+  $.fn.findProductIndex = function (product_id) {
+    for (var i = 0; i < products.length; i++) {
+      if (product_id == products[i].id) {
+        return i;
+      }
+    }
+    return -1;
   };
   //add to cart
   $("body").on("click", ".add-to-cart", function () {
@@ -103,12 +115,34 @@ $(document).ready(function () {
       }
     }
     if (bool) {
-      cart.push({ id: pid, quantity: 1, index: i });
+      cart.push({ id: pid, quantity: 1 });
     }
+
     $.fn.loadCart();
   });
   //increase quantity
+  $("body").on("click", "#increaseQuantity ,#decreaseQuantity", function () {
+    let action = $(this).data("value");
+    let pid = $(this).parent().data("id");
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].id == pid) {
+        break;
+      }
+    }
 
+    if (action == "increase") {
+      cart[i].quantity += 1;
+    } else {
+      cart[i].quantity -= 1;
+
+      if (cart[i].quantity < 1) {
+        console.log("deleting from cart:", cart[i]);
+        cart.splice(i, 1);
+      }
+    }
+
+    $.fn.loadCart();
+  });
   $.fn.loadBasicHtml();
   //end script
 });

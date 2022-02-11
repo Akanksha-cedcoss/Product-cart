@@ -166,6 +166,9 @@ body {
 }
 #product_list table td {
   text-align: center;
+  background-color: lightpink;
+  font-size: 15px;
+  color:rgb(5, 97, 1);
 }
 #search {
   margin-left: 230px;
