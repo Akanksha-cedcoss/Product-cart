@@ -6,6 +6,8 @@ $(document).ready(function () {
     { id: 104, name: "Table Tennis", image: "table-tennis.png", price: 130 },
     { id: 105, name: "Tennis", image: "tennis.png", price: 100 },
   ];
+  var cart = [];
+  //add prodct card for each product
   $.fn.addProductCard = function (parent_div, product) {
     let id = product.id;
     let name = product.name;
@@ -14,20 +16,99 @@ $(document).ready(function () {
     parent_div.append("<div id='product-" + id + "' class='product'></div>");
     product_div = $("#product-" + id);
     product_div.append("<img src='images/" + img + "'>");
+    product_div.append("<h3 class='title'><a href='#'>" + name + "</a></h3>");
+    product_div.append("<span>Price: $" + price + "</span>");
     product_div.append(
-      "<h3 class='title'><a href='#'>" + name + "</a></h3>"
+      "<a class='add-to-cart' href='#' data-id='" + id + "'>Add To Cart</a>"
     );
-    product_div.append("<span>Price: $"+ price+"</span>")
-    product_div.append("<a class='add-to-cart' href='#' data-id='"+id+"'>Add To Cart</a>");
   };
+  //load cart
+  $.fn.loadCart = function () {
+    var main_div = $("#main");
+    main_div.append("<div id='wrapper'></div>");
+    let Wrapperdiv = $("#wrapper");
+    Wrapperdiv.empty();
+    // button to delete cart
+    Wrapperdiv.append("<input type='button' value='Delete Cart' id='#deleteCart'>")
+    Wrapperdiv.append(
+      '<div id="product_list"><table id="product-table"></table></div>'
+    );
+    let table = $("#product-table");
+    table.append(
+      "<tr>" +
+        "<th>Product Id</th>" +
+        "<th>Product Name</th>" +
+        "<th>Product Price</th>" +
+        "<th>Quantity</th>" +
+        "<th>Action</th>" +
+        "</tr>"
+    );
+    if (cart.length > 0) {
+      $.fn.updateCart();
+    }
+  };
+  //update table data
+  $.fn.updateCart = function () {
+    let table = $("#product-table");
+    for (let i = 0; i < cart.length; i++) {
+      var current_product = cart[i];
+      var index = current_product.index;
+      table.append(
+        "<tr class='cart'><td>" +
+          current_product.id +
+          "</td>" +
+          "<td>" +
+          products[index].name +
+          "</td> " +
+          "<td>" +
+          products[index].price * current_product.quantity +
+          "</td>" +
+          "<td>" +
+          current_product.quantity +
+          "</td>" +
+          "<td data-id='" +
+          current_product.id +
+          "'><a href='#' data-value='increase' id='increaseQuantity'>+</a>" +
+          "<input id='manual-update-quantity' value=" +
+          current_product.quantity +
+          ">" +
+          "<a href='#' data-value='decrease' id='decreaseQuantity'>-</a>" +
+          "<input type='button' value='UPDATE' id='#update'>" +
+          "</td></tr>"
+      );
+    }
+  };
+  //load basic html
   $.fn.loadBasicHtml = function () {
-    let main_div = $("#main");
+    var main_div = $("#main");
     main_div.append("<div id='products'></div>");
     let product_div = $("#products");
+    //add product cards
     for (let i = 0; i < products.length; i++) {
       product_div.append($.fn.addProductCard(product_div, products[i]));
     }
+    
+    //load product card
+    $.fn.loadCart();
   };
+  //add to cart
+  $("body").on("click", ".add-to-cart", function () {
+    let pid = $(this).data("id");
+    let bool = true;
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].id == pid) {
+        cart[i].quantity += 1;
+        bool = false;
+        break;
+      }
+    }
+    if (bool) {
+      cart.push({ id: pid, quantity: 1, index: i });
+    }
+    $.fn.loadCart();
+  });
+  //increase quantity
+
   $.fn.loadBasicHtml();
   //end script
 });

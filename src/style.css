@@ -151,3 +151,44 @@ body {
   border-radius: 5px;
   border: 1px solid #cccccc;
 }
+#wrapper {
+  width: 80%;
+  margin: 20px auto 0;
+}
+
+#product_list table {
+  width: 500px;
+}
+
+#product_list table th {
+  text-align: center;
+  background-color: lightblue;
+}
+#product_list table td {
+  text-align: center;
+}
+#search {
+  margin-left: 230px;
+}
+#manual-update-quantity {
+  width: 7%;
+  margin-top: 0;
+}
+#decreaseQuantity,
+#increaseQuantity {
+  text-decoration: none;
+  font-size: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+#deleteCart {
+  width: 500px;
+  background: #3e9cbf;
+  padding: 8px 14px 10px;
+  border: 1px solid #3e9cbf;
+  cursor: pointer;
+  font-size: 1.2em;
+  display: block;
+  max-width: 60%;
+  margin: 20px auto 0px;
+}
